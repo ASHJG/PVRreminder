@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.service.PVRReminder"
+       name="PVR reminder"
+       version="0.0.01"
+       provider-name="AshJG">
+<requires>
+    <import addon="xbmc.python" version="2.20.0"/>
+    <import addon="script.module.elementtree" version="1.2.7"/>
+    <import addon="script.module.metahandler" version="2.7.0"/>
+  </requires>
+<extension point="xbmc.service" library="setalarms.py" start="startup"/>
+<extension point="kodi.context.item" library="contextmenu.py">
+  <item><label>30001</label>
+  <visible>StringCompare(Container.Content(LiveTV),true)</visible>
+  </item>
+</extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">Provides PVR remider service for XBMC.</summary>
+    <description lang="en">The add-on provides five reminders for programs in the Kodi PVR
+
+      Credits
+     - Cron-like helper classes CronTab and Event inspired by an answer by 
+       Brian on
+       http://stackoverflow.com/questions/373335/suggestions-for-a-cron-like-scheduler-in-python/374207#374207
+
+     - Clock clip art https://openclipart.org/detail/12591/alarm-clock-by-anonymous-12591
+
+     - fanart.jpg: a blend of 
+       http://commons.wikimedia.org/wiki/File:Sunrise_DUS.JPG
+       and 
+       http://colouringbook.org/art/svg/coloring-book/orologio-clock-alarm-icon-coloring-book-colouring-coloring-book-colouring-book-colouringbook-org-art-clip-art-clipart-clipartist-net-openclipart-org-scalable-vector-graphics-svg/
+    </description>
+    <platform>all</platform>
+  </extension>
+</addon>

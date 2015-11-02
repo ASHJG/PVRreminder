@@ -1,0 +1,9 @@
+<data>
+	<reminder id="1">
+		<enabled>false</enabled>
+		<programmename>Timothy Goes to School</programmename>
+		<starttime>22:30</starttime>
+		<sdate>Monday, 2 November 2015</sdate>
+		<channel>1</channel>
+	</reminder>
+</data>
