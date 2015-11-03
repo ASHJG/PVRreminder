@@ -15,20 +15,10 @@
   </item>
 </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">Provides PVR remider service for XBMC.</summary>
+    <summary lang="en">Provides PVR reminder service for XBMC.</summary>
     <description lang="en">The add-on provides five reminders for programs in the Kodi PVR
 
-      Credits
-     - Cron-like helper classes CronTab and Event inspired by an answer by 
-       Brian on
-       http://stackoverflow.com/questions/373335/suggestions-for-a-cron-like-scheduler-in-python/374207#374207
-
-     - Clock clip art https://openclipart.org/detail/12591/alarm-clock-by-anonymous-12591
-
-     - fanart.jpg: a blend of 
-       http://commons.wikimedia.org/wiki/File:Sunrise_DUS.JPG
-       and 
-       http://colouringbook.org/art/svg/coloring-book/orologio-clock-alarm-icon-coloring-book-colouring-coloring-book-colouring-book-colouringbook-org-art-clip-art-clipart-clipartist-net-openclipart-org-scalable-vector-graphics-svg/
+    The add-on provides five reminders for programs in the Kodi PVR
     </description>
     <platform>all</platform>
   </extension>
