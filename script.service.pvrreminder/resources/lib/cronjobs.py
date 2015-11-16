@@ -10,6 +10,9 @@ class CronTab(object):
     self.jobs = []
     self.__enabled = True
 
+  def switch(self):
+      self.__enabled = True
+
   def stop(self):
     """Stops the crontab."""
     self.__enabled = False

@@ -1,7 +1,7 @@
 # XBMC Media Center language file
 # Addon Name: PVRreminder
 # Addon id: script.service.PVRreminder
-# Addon version: 0.0.1
+# Addon version: 1.0.0
 # Addon Provider: Ashjg
 msgid ""
 msgstr ""
