@@ -1,2 +1,9 @@
 v1.0.0
  - First official revision
+
+ v1.1.0
+ - initial bug fixes
+
+ v1.2.0
+ - Add ability to configure advancements of reminders
+
