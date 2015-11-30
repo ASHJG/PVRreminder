@@ -4,7 +4,7 @@ import os
 import xbmc
 import xbmcaddon
 import xbmcgui
-#import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as et
 import setalarms
 import datetime
 
@@ -14,11 +14,9 @@ resource = xbmc.translatePath(os.path.join(cwd, 'resources').encode("utf-8")).de
 lib = xbmc.translatePath(os.path.join(resource, 'lib').encode("utf-8")).decode("utf-8")
 xmlfile = xbmc.translatePath(os.path.join(resource, 'reminder_data.xml').encode("utf-8")).decode("utf-8")
 
+
 sys.path.append(resource)
 sys.path.append(lib)
-from xml.etree import ElementTree as ET
-#tree = ET.parse(data)
-#root = tree.getroot()
 alarmclock = setalarms.AlarmClock()
 
 def indent(elem, level=0):
@@ -58,40 +56,35 @@ class Reminderstuff:
         xbmc.log("PVRReminder: Valid program time:" + str
         (Reminderstuff.validtime(self, new_programmetime)), xbmc.LOGDEBUG)
 
-
-
     def setreminder(self, new_programmename, new_programmetime, new_programmedate):
 
-        titletxt = "Reminder:" + str(new_programmename)
-        line1txt = "A reminder has been set for :" + str(new_programmename)
-        line2txt = "at :" + str(new_programmetime) + " on " + str(new_programmedate)
+        titletxt = "Reminder: " + str(new_programmename)
+        line1txt = "A reminder has been set for: " + str(new_programmename)
+        line2txt = "that starts at: " + str(new_programmetime) + " on " + str(new_programmedate)
 
         if Reminderstuff.validtime(self, new_programmetime):
+
             xbmc.log("PVRReminder: setting reminder [from context menu], valid program time:" + str \
             (Reminderstuff.validtime(self, new_programmetime)), xbmc.LOGDEBUG)
-
-            data = ET.Element("data")
-            reminder = ET.SubElement(data, "reminder")
-            reminder.set("id", "9")
-            enabled = ET.SubElement(reminder, "enabled")
+            data = et.Element("data")
+            reminder = et.SubElement(data, "reminder")
+            reminder.set("id", "0")
+            enabled = et.SubElement(reminder, "enabled")
             enabled.text = "true"
-            programmename = ET.SubElement(reminder, "programmename")
+            programmename = et.SubElement(reminder, "programmename")
             programmename.text = new_programmename
-            starttime = ET.SubElement(reminder, "starttime")
+            starttime = et.SubElement(reminder, "starttime")
             starttime.text = new_programmetime
-            sdate = ET.SubElement(reminder, "sdate")
+            sdate = et.SubElement(reminder, "sdate")
             sdate.text = new_programmedate
-            channel = ET.SubElement(reminder, "channel")
+            channel = et.SubElement(reminder, "channel")
             channel.text = "NA"
             indent(data, level=0)
-            tree = ET.ElementTree(data)
+            tree = et.ElementTree(data)
             tree.write(xmlfile, xml_declaration=True, encoding='utf-8', method="xml")
-
             Reminderstuff.setalert(self, titletxt, line1txt, line2txt)
             context_enabled = 'true'
             xbmc.log("PVRReminder: Contextmenu selection.", xbmc.LOGDEBUG)
-           # setalarms.AlarmClock.applysettings(alarmclock, contextenabled, new_programmename, new_programmetime, new_programmedate )
             setalarms.AlarmClockMonitor(alarmclock, context_enabled, new_programmename, new_programmetime, new_programmedate)
-           # setalarms.AlarmClock.start(alarmclock)
         else:
             Reminderstuff.invalidtime(self, new_programmetime)
