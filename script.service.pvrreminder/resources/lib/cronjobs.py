@@ -16,6 +16,7 @@ class CronTab(object):
   def stop(self):
     """Stops the crontab."""
     self.__enabled = False
+    self.xbmc.log("PVRReminder: Stopped Cron", self.xbmc.LOGDEBUG)
 
   def start(self):
     """Starts to check every minute, if the registered jobs should run."""
@@ -23,7 +24,7 @@ class CronTab(object):
     self.xbmc.log("PVRReminder: Cron is enabled:" + str(self.__enabled), self.xbmc.LOGDEBUG)
     while self.__enabled:
       if self.xbmc and not self.xbmc.abortRequested:
-        self.xbmc.log("Cron jobs:" + str(self.jobs), self.xbmc.LOGDEBUG)
+        self.xbmc.log("PVRReminder: Cron jobs:" + str(self.jobs), self.xbmc.LOGDEBUG)
         for job in self.jobs:
           self.xbmc.log("PVRReminder: checking job %s against %s" % (str(job), str(t)), 
                           self.xbmc.LOGDEBUG)
