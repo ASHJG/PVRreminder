@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <data>
-  <reminder id="9">
-    <enabled>true</enabled>
-    <programmename>The Job Lot</programmename>
-    <starttime>22:45</starttime>
-    <sdate>Monday, 16 November 2015</sdate>
+  <reminder id="0">
+    <enabled>false</enabled>
+    <programmename></programmename>
+    <starttime></starttime>
+    <sdate></sdate>
     <channel>NA</channel>
   </reminder>
 </data>
