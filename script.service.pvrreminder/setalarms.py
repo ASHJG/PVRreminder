@@ -33,11 +33,12 @@ def advancedtimer(self, reminder_advancement, new_programmetime):
     xbmc.log("PVRReminder: Advancement of reminder is : "+str(reminder_advancement), xbmc.LOGDEBUG)
     hr, mins = new_programmetime.split(":")
     mins = int(mins) - int(reminder_advancement)
-    if mins < 0:
-        mins = 60 - mins
-        hr = int(hr) - 1
 
-    programmetime = hr+":"+str(mins)
+    if mins < 0:
+        mins = (60 + mins)
+        hr = int(hr) - 1
+    xbmc.log("PVRReminder:  "+str(mins), xbmc.LOGDEBUG)
+    programmetime = str(hr)+":"+str(mins)
     return programmetime
 
 class AlarmClock:
@@ -101,13 +102,13 @@ class AlarmClock:
 
     def _getjobs(self, reminderid, contextenabled,  new_programmename, new_programmetime, new_programmedate):
 
-        xbmc.log("PVRReminder: Getting info from file, programme Name: " + str(new_programmename), xbmc.LOGDEBUG)
+        xbmc.log("PVRReminder: Getting info from file, programme Name: " + str(new_programmetime), xbmc.LOGDEBUG)
 
         if AlarmClock.validtime(self, new_programmetime):
             hr, mins = new_programmetime.split(":")
             filetoplay = new_programmename
             jobs = [Job(self._play, int(mins), int(hr), args=[filetoplay, reminderid])]
-            xbmc.log("PVRReminder: Time is valid, setting jobs: %s" % str(jobs), xbmc.LOGDEBUG)
+            xbmc.log("PVRReminder: Time is valid, setting jobs: %s" % str(new_programmetime), xbmc.LOGDEBUG)
         else:
             xbmc.log("PVRReminder: Setting old reminder to false as its in the past ", xbmc.LOGDEBUG)
             for enabled in roots.iter('enabled'):
