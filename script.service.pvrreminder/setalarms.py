@@ -63,8 +63,8 @@ class AlarmClock:
         xbmc.log("PVRReminder: Getting settings, triggered by user: "+str(contextenabled), xbmc.LOGDEBUG)
         self.addon = xbmcaddon.Addon()
         reminder_advancement = int(self.addon.getSetting("advancement"))
-        new_programmetime = advancedtimer(self, reminder_advancement, new_programmetime)
-        self.crontab.jobs = self._getalarms(contextenabled, new_programmename, new_programmetime, new_programmedate)
+
+        self.crontab.jobs = self._getalarms(contextenabled, new_programmename, new_programmetime, reminder_advancement, new_programmedate)
         self.stop()
         self.crontab.switch()
         self.crontab.start()
@@ -79,10 +79,12 @@ class AlarmClock:
         xbmc.log("PVRReminder: Stopping current alarm...", xbmc.LOGDEBUG)
         self.crontab.stop()
 
-    def _getalarms(self, contextenabled, new_programmename, new_programmetime, new_programmedate):
+    def _getalarms(self, contextenabled, new_programmename, new_programmetime, reminder_advancement, new_programmedate):
         """Get a list of the cron jobs for the enabled alarms."""
         jobs = []
+
         if contextenabled == "true":
+            new_programmetime = advancedtimer(self, reminder_advancement, new_programmetime)
             jobs.extend(self._getjobs(1, contextenabled,  new_programmename, new_programmetime, new_programmedate))
             xbmc.log("PVRReminder: setting New alarm from user input: %s" % str(new_programmename), xbmc.LOGDEBUG)
             return jobs
@@ -93,6 +95,7 @@ class AlarmClock:
                     reminderid = reminder.get('id')
                     new_programmetime = reminder.find('starttime').text
                     new_programmename = reminder.find('programmename').text
+                    new_programmetime = advancedtimer(self, reminder_advancement, new_programmetime)
                     jobs.extend(self._getjobs(reminderid, contextenabled, new_programmename, new_programmetime, new_programmedate))
                     xbmc.log("PVRReminder: setting old alarm from file", xbmc.LOGDEBUG)
                 else:
