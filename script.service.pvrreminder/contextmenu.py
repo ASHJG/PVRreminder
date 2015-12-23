@@ -1,37 +1,26 @@
 # -*- coding: utf-8 -*-
-#import sys
-#import os
 import xbmc
-#import xbmcaddon
-#import xml.etree.ElementTree as ET
 import reminders
-import setalarms
 
-#addon = xbmcaddon.Addon(id='script.service.PVRReminder')
-#cwd = addon.getAddonInfo('path').decode("utf-8")
-#resource = xbmc.translatePath(os.path.join(cwd, 'resources').encode("utf-8")).decode("utf-8")
-#lib = xbmc.translatePath(os.path.join(resource, 'lib').encode("utf-8")).decode("utf-8")
-#data = xbmc.translatePath(os.path.join(resource, 'reminder_data.xml').encode("utf-8")).decode("utf-8")
-#alarmclock = setalarms.AlarmClock()
+def cleantime(videostarttime):
+    # strip ot PM and add 12hrs
+    strtime = videostarttime
+    if videostarttime.find("pm") <>-1:
+        xbmc.log("PVRReminder: Removing PM and formatting to 24hr : ", xbmc.LOGDEBUG)
+        strtime.replace("pm", "")
+        hr, mins = strtime.split(":")
+        hrs = int(hr)+12
+        strtime = str(hrs)+":"+str(mins)
 
-#sys.path.append(resource)
-#sys.path.append(lib)
+    elif videostarttime.find("am")<>-1:
+        xbmc.log("PVRReminder: Removing AM and formatting to 24hr : ", xbmc.LOGDEBUG)
+        strtime.replace("am", "")
 
-#tree = ET.parse(data)
-#root = tree.getroot()
+    return strtime
 
-#from cronjobs import CronTab, Job
-#from datetime import datetime
-
-videostarttime = xbmc.getInfoLabel("ListItem.StartTime")
-#videostarttime = "23:55"
+videostarttime = cleantime(xbmc.getInfoLabel("ListItem.StartTime"))
 videoname = xbmc.getInfoLabel("ListItem.Title")
 videodate = xbmc.getInfoLabel("ListItem.StartDate")
-
-
-
+channelname= xbmc.getInfoLabel("ListItem.ChannelName")
 setreminderdata = reminders.Reminderstuff()
-setreminderdata.setreminder(videoname, videostarttime, videodate)
-
-
-
+setreminderdata.setreminder(videoname, videostarttime, videodate, channelname)
