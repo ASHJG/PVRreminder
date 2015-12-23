@@ -45,8 +45,13 @@ class Reminderstuff:
         """make sure its in the future"""
         now = datetime.datetime.now()
         hr, mins = programestarttime.split(":")
+        system_time = xbmc.getInfoLabel('System.Time(hh:mm)')
+        hour = system_time.split(':')[0]
+        minute = system_time.split(':')[1]
+
+        system_time = now.replace(hour=int(hour), minute=int(minute), second=1, microsecond=0)
         starttime = now.replace(hour=int(hr), minute=int(mins), second=1, microsecond=0)
-        return now < starttime
+        return system_time < starttime
 
     def setalert(self, alerttitle, line1txt, line2txt):
         xbmcgui.Dialog().ok(alerttitle, line1txt, line2txt)
@@ -56,7 +61,7 @@ class Reminderstuff:
         xbmc.log("PVRReminder: Valid program time:" + str
         (Reminderstuff.validtime(self, new_programmetime)), xbmc.LOGDEBUG)
 
-    def setreminder(self, new_programmename, new_programmetime, new_programmedate):
+    def setreminder(self, new_programmename, new_programmetime, new_programmedate, new_channelname):
 
         titletxt = "Reminder: " + str(new_programmename)
         line1txt = "A reminder has been set for: " + str(new_programmename)
@@ -78,13 +83,13 @@ class Reminderstuff:
             sdate = et.SubElement(reminder, "sdate")
             sdate.text = new_programmedate
             channel = et.SubElement(reminder, "channel")
-            channel.text = "NA"
+            channel.text = new_channelname
             indent(data, level=0)
             tree = et.ElementTree(data)
             tree.write(xmlfile, xml_declaration=True, encoding='utf-8', method="xml")
             Reminderstuff.setalert(self, titletxt, line1txt, line2txt)
             context_enabled = 'true'
             xbmc.log("PVRReminder: Contextmenu selection.", xbmc.LOGDEBUG)
-            setalarms.AlarmClockMonitor(alarmclock, context_enabled, new_programmename, new_programmetime, new_programmedate)
+            setalarms.AlarmClockMonitor(alarmclock, context_enabled, new_programmename, new_programmetime, new_programmedate, new_channelname)
         else:
             Reminderstuff.invalidtime(self, new_programmetime)

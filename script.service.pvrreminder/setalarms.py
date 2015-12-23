@@ -24,9 +24,9 @@ roots = trees.getroot()
 from cronjobs import CronTab, Job
 
 
-def remindme():
-    alerttitle = "Reminder "
-    line1 = "A program that was added to the reminder is about to start."
+def remindme(filetoplay, new_channelname):
+    alerttitle = "Reminder for programme:  "+ filetoplay
+    line1 = "The programme "+filetoplay+" that was added to the reminder is about to start on "+ new_channelname
     xbmcgui.Dialog().ok(alerttitle, line1)
 
 def advancedtimer(self, reminder_advancement, new_programmetime):
@@ -58,13 +58,13 @@ class AlarmClock:
         return starttime > now
 
 
-    def applysettings(self, contextenabled, new_programmename, new_programmetime, new_programmedate):
+    def applysettings(self, contextenabled, new_programmename, new_programmetime, new_programmedate, new_channelname):
         """Gets the current configuration and updates the scheduler."""
         xbmc.log("PVRReminder: Getting settings, triggered by user: "+str(contextenabled), xbmc.LOGDEBUG)
         self.addon = xbmcaddon.Addon()
         reminder_advancement = int(self.addon.getSetting("advancement"))
 
-        self.crontab.jobs = self._getalarms(contextenabled, new_programmename, new_programmetime, reminder_advancement, new_programmedate)
+        self.crontab.jobs = self._getalarms(contextenabled, new_programmename, new_programmetime, reminder_advancement, new_programmedate, new_channelname)
         self.stop()
         self.crontab.switch()
         self.crontab.start()
@@ -79,13 +79,13 @@ class AlarmClock:
         xbmc.log("PVRReminder: Stopping current alarm...", xbmc.LOGDEBUG)
         self.crontab.stop()
 
-    def _getalarms(self, contextenabled, new_programmename, new_programmetime, reminder_advancement, new_programmedate):
+    def _getalarms(self, contextenabled, new_programmename, new_programmetime, reminder_advancement, new_programmedate, new_channelname):
         """Get a list of the cron jobs for the enabled alarms."""
         jobs = []
 
         if contextenabled == "true":
             new_programmetime = advancedtimer(self, reminder_advancement, new_programmetime)
-            jobs.extend(self._getjobs(1, contextenabled,  new_programmename, new_programmetime, new_programmedate))
+            jobs.extend(self._getjobs(1, contextenabled,  new_programmename, new_programmetime, new_programmedate, new_channelname))
             xbmc.log("PVRReminder: setting New alarm from user input: %s" % str(new_programmename), xbmc.LOGDEBUG)
             return jobs
         else:
@@ -96,21 +96,21 @@ class AlarmClock:
                     new_programmetime = reminder.find('starttime').text
                     new_programmename = reminder.find('programmename').text
                     new_programmetime = advancedtimer(self, reminder_advancement, new_programmetime)
-                    jobs.extend(self._getjobs(reminderid, contextenabled, new_programmename, new_programmetime, new_programmedate))
+                    jobs.extend(self._getjobs(reminderid, contextenabled, new_programmename, new_programmetime, new_programmedate, new_channelname))
                     xbmc.log("PVRReminder: setting old alarm from file", xbmc.LOGDEBUG)
                 else:
                     xbmc.log("PVRReminder: Going to have to stop alarm as there is nothing to remind", xbmc.LOGDEBUG)
                     AlarmClock.stop(self)
             return jobs
 
-    def _getjobs(self, reminderid, contextenabled,  new_programmename, new_programmetime, new_programmedate):
+    def _getjobs(self, reminderid, contextenabled,  new_programmename, new_programmetime, new_programmedate, new_channelname):
 
         xbmc.log("PVRReminder: Getting info from file, programme Name: " + str(new_programmetime), xbmc.LOGDEBUG)
 
         if AlarmClock.validtime(self, new_programmetime):
             hr, mins = new_programmetime.split(":")
             filetoplay = new_programmename
-            jobs = [Job(self._play, int(mins), int(hr), args=[filetoplay, reminderid])]
+            jobs = [Job(self._play, int(mins), int(hr), args=[filetoplay, reminderid, new_channelname])]
             xbmc.log("PVRReminder: Time is valid, setting jobs: %s" % str(new_programmetime), xbmc.LOGDEBUG)
         else:
             xbmc.log("PVRReminder: Setting old reminder to false as its in the past ", xbmc.LOGDEBUG)
@@ -121,9 +121,9 @@ class AlarmClock:
             jobs = []
         return jobs
 
-    def _play(self, item, reminderid):
+    def _play(self, filetoplay, reminderid, new_channelname):
 
-        remindme()
+        remindme(filetoplay,new_channelname)
         for enabled in roots.iter('enabled'):
             enabled.text = "false"
             trees.write(data)
@@ -134,11 +134,11 @@ class AlarmClock:
 class AlarmClockMonitor(xbmc.Monitor):
     """Monitor subclass listening on configuration changes and termination requests."""
 
-    def __init__(self, alarmclock, contextenabled, new_programmename, new_programmetime, new_programmedate):
+    def __init__(self, alarmclock, contextenabled, new_programmename, new_programmetime, new_programmedate, new_channelname):
         xbmc.Monitor.__init__(self)
         xbmc.log("PVRReminder: Starting AlarmClockMonitor"+ str(contextenabled), xbmc.LOGDEBUG)
         self.alarmClock = alarmclock
-        self.alarmClock.applysettings(contextenabled, new_programmename, new_programmetime, new_programmedate)
+        self.alarmClock.applysettings(contextenabled, new_programmename, new_programmetime, new_programmedate, new_channelname)
 
     def onSettingsChanged(self):
         self.alarmClock.applysettings()
@@ -152,5 +152,6 @@ if __name__ == '__main__':
     new_programmename = "false"
     new_programmetime = "false"
     new_programmedate = "false"
+    new_channelname = "false"
     alarmClock = AlarmClock()
-    monitor = AlarmClockMonitor(alarmClock, contextenabled, new_programmename, new_programmetime, new_programmedate)
+    monitor = AlarmClockMonitor(alarmClock, contextenabled, new_programmename, new_programmetime, new_programmedate, new_channelname)
