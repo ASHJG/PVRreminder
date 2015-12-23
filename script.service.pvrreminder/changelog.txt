@@ -7,3 +7,8 @@ v1.0.0
  v1.2.0
  - Add ability to configure advancements of reminders
 
+ v1.2.1
+ - fixed bug, when clock is formatted in 12hr
+
+  v1.3.0
+ - displays programme and channel name on reminder
